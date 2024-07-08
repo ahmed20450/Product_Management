@@ -1,0 +1,120 @@
+<div class="container-fluid">
+
+  <!-- Page Heading -->
+
+  <!-- DataTales Example -->
+  <div class="card shadow mb-4">
+      <div class="card-header py-3">
+          <h4 class="m-0 font-weight-bold text-primary"><b>Liste des Produits</b></h4>
+      </div>
+
+    </div>
+      <div class="card-body">
+        <div class="table-responsive">
+
+            <div class="col-md-3" style="margin-bottom: -37px;" >
+              <div class="form-group">
+                <input type="text" class="form-control" placeholder="chercher produit" id="searchInput" [(ngModel)]="searchQuery" (input)="applySearch()" />
+              </div>
+            </div>
+          <a routerLink="/Produits/ajouterProduit" style="float: right;" class="btn btn-primary">Ajouter produit</a>
+
+              <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                  <thead>
+                      <tr>
+                          <th>Nom</th>
+                          <th>prix Unitaire</th>
+                          <th>Quantité</th>
+                          <th>Actions</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+
+
+                      <tr  *ngFor="let item of dataArray;index as i ">
+                          <td>{{item.nom}}</td>
+                          <td>{{item.prixUnitaire}}</td>
+                          <td>{{item.quantite}}</td>
+                          <td>
+                              <button class="btn btn-success" (click)="getdata(item.nom,item.prixUnitaire,item.quantite,item.id)" data-bs-toggle="modal" data-bs-target="#exampleModal">Modifier</button>
+                              <button class="btn btn-danger" (click)="deleteProduct(item.id, i)">Supprimer</button>
+                          </td>
+                      </tr>
+
+
+
+                  </tbody>
+              </table>
+          </div>
+      </div>
+  </div>
+
+
+
+
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modifier produit</h5>
+      </div>
+      <div class="modal-body">
+        <!-- form update start here -->
+        <form #f="ngForm" (ngSubmit)="updateNewProduct(f)">
+          <!-- nom validation start here -->
+              <div class="form-group">
+          4
+                <label for="exampleFormControlInput1">nom</label>
+                <input type="text" class="form-control" placeholder="nom" [(ngModel)]="dataProduct.nom" required name="nom" #nom="ngModel" ngModel minlength="2" maxlength="20">
+              </div>
+              <div class="alert alert-danger" *ngIf="nom.errors?.['minlength'] && nom.touched">
+                Entrer le nom de produit
+              </div>
+              <div class="alert alert-danger" *ngIf="nom.errors?.['minlength'] && nom.touched">
+                Le prénom doit etre au minimum 2 caractère
+              </div>
+          <!-- nom validation end here -->
+
+          <!-- prixUnitaire validation start here -->
+              <div class="form-group">
+                  <label for="exampleFormControlInput1">prixUnitaire</label>
+                  <input type="text" class="form-control" placeholder="prixUnitaire" [(ngModel)]="dataProduct.prixUnitaire" required name="prixUnitaire" #prixUnitaire="ngModel" minlength="2" maxlength="20" ngModel>
+                </div>
+                <div class="alert alert-danger" *ngIf="prixUnitaire.errors?.['minlength'] && prixUnitaire.touched">
+                  Entrer le prixUnitaire de produit
+                </div>
+
+          <!-- prixUnitaire validation end here -->
+
+          <!-- quantité validation start here -->
+                <div class="form-group">
+                  <label for="exampleFormControlInput1">quantite</label>
+                  <input type="number" class="form-control" placeholder="quantite" [(ngModel)]="dataProduct.quantite" required name="quantite" #quantite="ngModel" ngModel>
+                </div>
+                <div class="alert alert-danger" *ngIf="quantite.errors?.['minlength'] && quantite.touched">
+                  quantite is required
+                </div>
+           <!-- quantite validation end here -->
+
+
+
+
+              <div class="alert alert-success" *ngIf="messageSuccess">
+                  {{messageSuccess}}
+              </div>
+
+             <button class="btn btn-primary" [disabled]="f.invalid">Modifier produit</button>
+            </form>
+
+
+
+        <!-- form update end here -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div>

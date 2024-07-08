@@ -1,0 +1,50 @@
+
+  <div class="container col-md-5">
+
+
+    <form #f="ngForm" (ngSubmit)="add(f)" method="POST">
+  <!-- nom validation start here -->
+      <div class="form-group m-3">
+
+        <label for="exampleFormControlInput1 "><b>nom</b></label>
+        <input type="text" class="form-control" placeholder="nom" required name="nom" #nom="ngModel" ngModel minlength="2" maxlength="20">
+      </div>
+      <div class="alert alert-danger" *ngIf="nom.errors?.['required']&& nom.touched">
+        nom is required
+      </div>
+      <div class="alert alert-danger" *ngIf="nom.errors?.['minlength'] && nom.touched">
+        nom must be minimum 2 caractere
+      </div>
+  <!-- nom validation end here -->
+
+  <!-- prixUnitaire validation start here -->
+      <div class="form-group m-3">
+          <label for="exampleFormControlInput1"><b>prixUnitaire</b></label>
+          <input type="text" class="form-control" placeholder="prixUnitaire" required name="prixUnitaire" #prixUnitaire="ngModel"  ngModel>
+        </div>
+        <div class="alert alert-danger" *ngIf="prixUnitaire.errors?.['required'] && prixUnitaire.touched">
+          prixUnitaire is required
+        </div>
+  <!-- prixUnitaire validation end here -->
+
+  <!-- quantite validation start here -->
+        <div class="form-group m-3">
+          <label for="exampleFormControlInput1"><b>quantite</b></label>
+          <input type="text" class="form-control" placeholder="quantite" required name="quantite" #quantite="ngModel" ngModel>
+        </div>
+        <div class="alert alert-danger" *ngIf="quantite.errors?.['required'] && quantite.touched">
+          quantite is required
+        </div>
+   <!-- quantite validation end here -->
+
+    <div class="alert alert-danger" *ngIf="messageErr">
+          {{messageErr}}
+        </div>
+
+     <button class="btn btn-primary m-3" [disabled]="f.invalid">Ajouter produit</button>
+    </form>
+
+
+   </div>
+
+
