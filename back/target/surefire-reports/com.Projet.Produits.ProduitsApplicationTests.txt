@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.Projet.Produits.ProduitsApplicationTests
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 18.679 s - in com.Projet.Produits.ProduitsApplicationTests
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 11.967 s - in com.Projet.Produits.ProduitsApplicationTests
