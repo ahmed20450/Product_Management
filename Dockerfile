@@ -24,7 +24,7 @@ COPY --from=backend-build /app/target/*.jar backend-app.jar
 COPY --from=frontend-build /app/dist/ /frontend
 
 # Expose the application port
-EXPOSE 8080
+EXPOSE 8081
 
 # Set the startup command
 CMD ["java", "-jar", "backend-app.jar"]
