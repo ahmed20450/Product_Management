@@ -28,6 +28,7 @@ jobs:
           --health-start-period=120s
         volumes:
           - /dev/shm:/dev/shm
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -52,9 +53,17 @@ jobs:
           done
           echo "Oracle did not become ready in time"
           exit 1
+
       - name: Check Oracle container logs if startup fails
         if: failure()
-        run: docker logs $(docker ps -aq --filter "ancestor=gvenzl/oracle-xe:21-slim")
+        run: |
+          CONTAINER_ID=$(docker ps -aq --filter "ancestor=gvenzl/oracle-xe:11-slim")
+          if [ -n "$CONTAINER_ID" ]; then
+            docker logs $CONTAINER_ID
+          else
+            echo "No Oracle container found"
+          fi
+
       - name: Configure application.properties
         run: |
           echo "spring.datasource.url=jdbc:oracle:thin:@localhost:1521/XE" > back/src/main/resources/application.properties
