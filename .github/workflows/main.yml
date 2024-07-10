@@ -14,7 +14,7 @@ jobs:
 
     services:
       oracle:
-        image: gvenzl/oracle-xe:21-slim
+        image: gvenzl/oracle-xe:11-slim
         ports:
           - 1521:1521
         env:
@@ -28,7 +28,6 @@ jobs:
           --health-start-period=120s
         volumes:
           - /dev/shm:/dev/shm
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
