@@ -1,6 +1,6 @@
-C:\Users\Bengaied Ahmed\Desktop\gestion_de_produits\back\src\main\java\com\Projet\Produits\service\ProductService.java
-C:\Users\Bengaied Ahmed\Desktop\gestion_de_produits\back\src\main\java\com\Projet\Produits\service\ProductServiceImpl.java
-C:\Users\Bengaied Ahmed\Desktop\gestion_de_produits\back\src\main\java\com\Projet\Produits\entities\Produit.java
-C:\Users\Bengaied Ahmed\Desktop\gestion_de_produits\back\src\main\java\com\Projet\Produits\repositories\ProduitRepository.java
-C:\Users\Bengaied Ahmed\Desktop\gestion_de_produits\back\src\main\java\com\Projet\Produits\controllers\ProduitController.java
-C:\Users\Bengaied Ahmed\Desktop\gestion_de_produits\back\src\main\java\com\Projet\Produits\ProduitsApplication.java
+/workspace/back/src/main/java/com/Projet/Produits/controllers/ProduitController.java
+/workspace/back/src/main/java/com/Projet/Produits/entities/Produit.java
+/workspace/back/src/main/java/com/Projet/Produits/ProduitsApplication.java
+/workspace/back/src/main/java/com/Projet/Produits/service/ProductService.java
+/workspace/back/src/main/java/com/Projet/Produits/repositories/ProduitRepository.java
+/workspace/back/src/main/java/com/Projet/Produits/service/ProductServiceImpl.java
