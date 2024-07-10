@@ -11,6 +11,21 @@ on:
 jobs:
   build-backend:
     runs-on: ubuntu-latest
+
+    services:
+      oracle:
+        image: gvenzl/oracle-xe:18
+        ports:
+          - 1521:1521
+        env:
+          ORACLE_PASSWORD: oracle
+          ORACLE_DATABASE: XE
+        options: >-
+          --health-cmd="healthcheck.sh"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -21,8 +36,32 @@ jobs:
           distribution: "corretto"
           java-version: "17"
 
+      - name: Verify Oracle Connection
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y sqlplus
+          for i in {1..30}; do
+            if sqlplus -s system/oracle@//localhost:1521/XE <<< "SELECT 1 FROM DUAL;" > /dev/null 2>&1; then
+              echo "Oracle is ready!"
+              exit 0
+            fi
+            echo "Waiting for Oracle... attempt $i"
+            sleep 10
+          done
+          echo "Oracle did not become ready in time"
+          exit 1
+
+      - name: Configure application.properties
+        run: |
+          echo "spring.datasource.url=jdbc:oracle:thin:@localhost:1521/XE" > back/src/main/resources/application.properties
+          echo "spring.datasource.username=system" >> back/src/main/resources/application.properties
+          echo "spring.datasource.password=oracle" >> back/src/main/resources/application.properties
+          echo "spring.datasource.driver-class-name=oracle.jdbc.OracleDriver" >> back/src/main/resources/application.properties
+          echo "spring.jpa.database-platform=org.hibernate.dialect.OracleDialect" >> back/src/main/resources/application.properties
+          echo "spring.jpa.hibernate.ddl-auto=update" >> back/src/main/resources/application.properties
+
       - name: Unit Tests
-        run: mvn -B test --file back/pom.xml
+        run: mvn -B test --file back/pom.xml -Dspring.profiles.active=test -Dlogging.level.org.hibernate.SQL=DEBUG -Dlogging.level.org.hibernate.type.descriptor.sql.BasicBinder=TRACE
 
       - name: Build with Maven
         run: mvn clean package --file back/pom.xml
@@ -31,8 +70,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: backend-artifact
-          path: |
-            back/target/*.jar
+          path: back/target/*.jar
 
   build-frontend:
     runs-on: ubuntu-latest
@@ -55,8 +93,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: frontend-artifact
-          path: |
-            front/dist/
+          path: front/dist/
 
   docker:
     runs-on: ubuntu-latest
@@ -93,6 +130,6 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          dockerfile: Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/Product_management:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/product_management:latest
+          file: Dockerfile
