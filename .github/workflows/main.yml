@@ -42,7 +42,16 @@ jobs:
       - name: Verify Oracle Connection
         run: |
           sudo apt-get update
-          sudo apt-get install -y sqlplus
+          sudo apt-get install -y libaio1 wget unzip
+          wget https://download.oracle.com/otn_software/linux/instantclient/instantclient-basiclite-linux.x64-21.6.0.0.0dbru.zip
+          wget https://download.oracle.com/otn_software/linux/instantclient/instantclient-sqlplus-linux.x64-21.6.0.0.0dbru.zip
+          unzip instantclient-basiclite-linux.x64-21.6.0.0.0dbru.zip
+          unzip instantclient-sqlplus-linux.x64-21.6.0.0.0dbru.zip
+          sudo mkdir -p /opt/oracle
+          sudo mv instantclient_21_6 /opt/oracle/instantclient
+          sudo sh -c "echo /opt/oracle/instantclient > /etc/ld.so.conf.d/oracle-instantclient.conf"
+          sudo ldconfig
+          export PATH=/opt/oracle/instantclient:$PATH
           for i in {1..30}; do
             if sqlplus -s system/oracle@//localhost:1521/XE <<< "SELECT 1 FROM DUAL;" > /dev/null 2>&1; then
               echo "Oracle is ready!"
