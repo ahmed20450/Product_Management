@@ -12,6 +12,23 @@ jobs:
   build-backend:
     runs-on: ubuntu-latest
 
+    services:
+      oracle:
+        image: gvenzl/oracle-xe:21-slim
+        ports:
+          - 1521:1521
+        env:
+          ORACLE_PASSWORD: oracle
+          ORACLE_DATABASE: XE
+        options: >-
+          --health-cmd="healthcheck.sh"
+          --health-interval=30s
+          --health-timeout=20s
+          --health-retries=10
+          --health-start-period=120s
+        volumes:
+          - /dev/shm:/dev/shm
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -36,7 +53,9 @@ jobs:
           done
           echo "Oracle did not become ready in time"
           exit 1
-
+      - name: Check Oracle container logs if startup fails
+        if: failure()
+        run: docker logs $(docker ps -aq --filter "ancestor=gvenzl/oracle-xe:21-slim")
       - name: Configure application.properties
         run: |
           echo "spring.datasource.url=jdbc:oracle:thin:@localhost:1521/XE" > back/src/main/resources/application.properties
