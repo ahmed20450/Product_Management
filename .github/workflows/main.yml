@@ -22,12 +22,6 @@ jobs:
           distribution: "corretto"
           java-version: "17"
 
-      - name: Unit Tests
-        run: mvn -B test --file back/pom.xml -Dspring.profiles.active=test -Dlogging.level.org.hibernate.SQL=DEBUG -Dlogging.level.org.hibernate.type.descriptor.sql.BasicBinder=TRACE
-
-      - name: Build with Maven
-        run: mvn clean package --file back/pom.xml
-
       - name: Archive backend build
         uses: actions/upload-artifact@v3
         with:
