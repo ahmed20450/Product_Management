@@ -42,8 +42,8 @@ jobs:
       - name: Configure application.properties
         run: |
           echo "spring.datasource.url=jdbc:oracle:thin:@localhost:1521/XE" > back/src/main/resources/application.properties
-          echo "spring.datasource.username=Products" >> back/src/main/resources/application.properties
-          echo "spring.datasource.password=root" >> back/src/main/resources/application.properties
+          echo "spring.datasource.username=system" >> back/src/main/resources/application.properties
+          echo "spring.datasource.password=oracle" >> back/src/main/resources/application.properties
           echo "spring.datasource.driver-class-name=oracle.jdbc.OracleDriver" >> back/src/main/resources/application.properties
           echo "spring.jpa.database-platform=org.hibernate.dialect.OracleDialect" >> back/src/main/resources/application.properties
           echo "spring.jpa.hibernate.ddl-auto=update" >> back/src/main/resources/application.properties
