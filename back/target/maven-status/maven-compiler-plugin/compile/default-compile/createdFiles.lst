@@ -1,0 +1,6 @@
+com\Projet\Produits\ProduitsApplication.class
+com\Projet\Produits\service\ProductServiceImpl.class
+com\Projet\Produits\controllers\ProduitController.class
+com\Projet\Produits\repositories\ProduitRepository.class
+com\Projet\Produits\entities\Produit.class
+com\Projet\Produits\service\ProductService.class
