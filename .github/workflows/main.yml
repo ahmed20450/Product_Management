@@ -22,10 +22,13 @@ jobs:
           distribution: "corretto"
           java-version: "17"
       - name: Unit Tests
-        run: mvn -B test --file pom.xml
+        run: |
+          cd back
+          mvn -B test --file pom.xml
 
       - name: Build the application
         run: |
+          cd back
           mvn clean
           mvn -B package --file pom.xml
 
