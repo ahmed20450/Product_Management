@@ -12,23 +12,6 @@ jobs:
   build-backend:
     runs-on: ubuntu-latest
 
-    services:
-      oracle:
-        image: gvenzl/oracle-xe:11-slim
-        ports:
-          - 1521:1521
-        env:
-          ORACLE_PASSWORD: oracle
-          ORACLE_DATABASE: XE
-        options: >-
-          --health-cmd="healthcheck.sh"
-          --health-interval=30s
-          --health-timeout=20s
-          --health-retries=10
-          --health-start-period=120s
-        volumes:
-          - /dev/shm:/dev/shm
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -38,22 +21,6 @@ jobs:
         with:
           distribution: "corretto"
           java-version: "17"
-
-      - name: Configure application.properties
-        run: |
-          echo "spring.datasource.url=jdbc:oracle:thin:@localhost:1521/XE" > back/src/main/resources/application.properties
-          echo "spring.datasource.username=system" >> back/src/main/resources/application.properties
-          echo "spring.datasource.password=oracle" >> back/src/main/resources/application.properties
-          echo "spring.datasource.driver-class-name=oracle.jdbc.OracleDriver" >> back/src/main/resources/application.properties
-          echo "spring.jpa.database-platform=org.hibernate.dialect.OracleDialect" >> back/src/main/resources/application.properties
-          echo "spring.jpa.hibernate.ddl-auto=update" >> back/src/main/resources/application.properties
-          echo "spring.jpa.properties.hibernate.dialect.storage_engine=innodb" >> back/src/main/resources/application.properties
-          echo "spring.jpa.properties.hibernate.jdbc.time_zone=UTC" >> back/src/main/resources/application.properties
-          echo "spring.jpa.show-sql=true" >> back/src/main/resources/application.properties
-          echo "server.port=8081" >> back/src/main/resources/application.properties
-
-      - name: Set timezone for Oracle
-        run: echo "export TZ=UTC" >> $GITHUB_ENV
 
       - name: Unit Tests
         run: mvn -B test --file back/pom.xml -Dspring.profiles.active=test -Dlogging.level.org.hibernate.SQL=DEBUG -Dlogging.level.org.hibernate.type.descriptor.sql.BasicBinder=TRACE
