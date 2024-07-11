@@ -39,40 +39,6 @@ jobs:
           distribution: "corretto"
           java-version: "17"
 
-      - name: Verify Oracle Connection
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libaio1 wget unzip
-          wget https://download.oracle.com/otn_software/linux/instantclient/instantclient-basiclite-linux.x64-21.6.0.0.0dbru.zip
-          wget https://download.oracle.com/otn_software/linux/instantclient/instantclient-sqlplus-linux.x64-21.6.0.0.0dbru.zip
-          unzip instantclient-basiclite-linux.x64-21.6.0.0.0dbru.zip
-          unzip instantclient-sqlplus-linux.x64-21.6.0.0.0dbru.zip
-          sudo mkdir -p /opt/oracle
-          sudo mv instantclient_21_6 /opt/oracle/instantclient
-          sudo sh -c "echo /opt/oracle/instantclient > /etc/ld.so.conf.d/oracle-instantclient.conf"
-          sudo ldconfig
-          export PATH=/opt/oracle/instantclient:$PATH
-          for i in {1..30}; do
-            if sqlplus -s system/oracle@//localhost:1521/XE <<< "SELECT 1 FROM DUAL;" > /dev/null 2>&1; then
-              echo "Oracle is ready!"
-              exit 0
-            fi
-            echo "Waiting for Oracle... attempt $i"
-            sleep 10
-          done
-          echo "Oracle did not become ready in time"
-          exit 1
-
-      - name: Check Oracle container logs if startup fails
-        if: failure()
-        run: |
-          CONTAINER_ID=$(docker ps -aq --filter "ancestor=gvenzl/oracle-xe:11-slim")
-          if [ -n "$CONTAINER_ID" ]; then
-            docker logs $CONTAINER_ID
-          else
-            echo "No Oracle container found"
-          fi
-
       - name: Configure application.properties
         run: |
           echo "spring.datasource.url=jdbc:oracle:thin:@localhost:1521/XE" > back/src/main/resources/application.properties
